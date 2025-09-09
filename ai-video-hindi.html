@@ -159,18 +159,19 @@ document.getElementById('recordBtn').onclick=async()=>{
   mediaRecorder.onstop=async()=>{
     statusEl.textContent="Converting video to MP4...";
     const webmBlob = new Blob(chunks, { type: 'video/webm' });
-    const mp4Blob = await convertWebMtoMP4(webmBlob);
-    statusEl.textContent = "Conversion done. Ready for download.";
-    const url = URL.createObjectURL(mp4Blob);
-    videoPreview.src = url;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'news-video.mp4';
-    a.textContent = '⬇ Download Video MP4';
-    downloadArea.innerHTML = '';
-    downloadArea.appendChild(a);
-  };
+  mediaRecorder.onstop = (e) => {
+  const webmBlob = new Blob(chunks, { type: 'video/webm' });
+  const url = URL.createObjectURL(webmBlob);
+  videoPreview.src = url;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'news-video.webm';
+  a.textContent = '⬇ Download Video WebM';
+  downloadArea.innerHTML = '';
+  downloadArea.appendChild(a);
 };
+
 </script>
 </body>
 </html>
+
