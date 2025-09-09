@@ -123,15 +123,18 @@ document.getElementById('previewBtn').onclick=async()=>{
 };
 
 // Record + Download, MP4 via ffmpeg.js
-async function convertWebMtoMP4(webmBlob) {
-  const { createFFmpeg, fetchFile } = FFmpeg;
-  const ffmpeg = createFFmpeg({ log: false });
-  await ffmpeg.load();
-  ffmpeg.FS('writeFile', 'input.webm', await fetchFile(webmBlob));
-  await ffmpeg.run('-i', 'input.webm', '-c:v', 'libx264', '-preset', 'fast', '-pix_fmt', 'yuv420p', 'output.mp4');
-  const data = ffmpeg.FS('readFile', 'output.mp4');
-  return new Blob([data.buffer], { type: 'video/mp4' });
-}
+mediaRecorder.onstop = (e) => {
+  const webmBlob = new Blob(chunks, { type: 'video/webm' });
+  const url = URL.createObjectURL(webmBlob);
+  videoPreview.src = url;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'news-video.webm';
+  a.textContent = '⬇ Download Video WebM';
+  downloadArea.innerHTML = '';
+  downloadArea.appendChild(a);
+};
+
 
 document.getElementById('recordBtn').onclick=async()=>{
   const lines = textInput.value.split('\n').filter(Boolean);
@@ -174,4 +177,5 @@ document.getElementById('recordBtn').onclick=async()=>{
 </script>
 </body>
 </html>
+
 
